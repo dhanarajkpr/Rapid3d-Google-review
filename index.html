@@ -8,10 +8,27 @@
       text-align: center;
       padding: 40px;
     }
-    button {
+    button, input[type="file"] {
       font-size: 18px;
-      padding: 10px 20px;
       margin-top: 20px;
+    }
+    #preview {
+      margin-top: 20px;
+      max-width: 300px;
+      border: 1px solid #ccc;
+      display: none;
+    }
+    #thankYou {
+      display: none;
+      font-size: 24px;
+      color: green;
+      margin-top: 30px;
+      animation: bounceIn 1s ease forwards;
+    }
+    @keyframes bounceIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      60% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); }
     }
   </style>
 </head>
@@ -19,19 +36,52 @@
   <h2>🎉 Thanks for visiting Rapid3D!</h2>
   <p>Please leave us a quick review on Google:</p>
 
-  <a href="https://www.google.com/maps/place/Rapid+3D+-+3D+Printing+Services+in+Coimbatore+%7C+3D+Scanning+Service+in+Coimbatore/@11.043752,76.960981,17z/data=!3m1!4b1!4m6!3m5!1s0x3ba8588dd8eb2e19:0x305ec038f99ff48e!8m2!3d11.043752!4d76.960981!16s%2Fg%2F11f_c01mbx?entry=ttu&g_ep=EgoyMDI1MTAyMi4wIKXMDSoASAFQAw%3D%3D" target="_blank">
+  <a href="https://www.google.com/maps/place/Rapid+3D+-+3D+Printing+Services+in+Coimbatore+%7C+3D+Scanning+Service+in+Coimbatore/@11.043752,76.960981,17z/data=!3m1!4b1!4m6!3m5!1s0x3ba8588dd8eb2e19:0x305ec038f99ff48e!8m2!3d11.043752!4d76.960981!16s%2Fg%2F11f_c01mbx?entry=ttu" target="_blank">
     <button>Leave a Review</button>
   </a>
 
-  <p>Once done, click below to claim your reward:</p>
-  <button onclick="confirmReview()">✅ I’ve submitted my review</button>
+  <p>Once done, upload a screenshot of your review:</p>
+  <input type="file" id="reviewImage" accept="image/*" onchange="showPreview(event)">
+  <br>
+  <img id="preview" src="" alt="Review Screenshot Preview">
+
+  <br>
+  <button onclick="submitReview()">✅ I've submitted my review</button>
+
+  <div id="thankYou">🎁 Thank you! Your toy is on the way!</div>
+
+  <!-- Sound effect -->
+  <audio id="uploadSound" src="upload-sound.mp3" preload="auto"></audio>
 
   <script>
-    function confirmReview() {
-      fetch("192.168.1.138", {
+    function showPreview(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const preview = document.getElementById("preview");
+          preview.src = e.target.result;
+          preview.style.display = "block";
+
+          // Play sound effect
+          document.getElementById("uploadSound").play();
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function submitReview() {
+      const fileInput = document.getElementById("reviewImage");
+      if (fileInput.files.length === 0) {
+        alert("Please upload a screenshot of your review first.");
+        return;
+      }
+
+      fetch("http://192.168.1.138/review", {
         method: "POST"
       }).then(() => {
-        alert("Thanks! Your toy is on the way 🎁");
+        const thankYou = document.getElementById("thankYou");
+        thankYou.style.display = "block";
       }).catch(() => {
         alert("Could not reach dispenser. Please try again.");
       });
