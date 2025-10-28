@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Rapid3D Review Reward</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+    button {
+      font-size: 18px;
+      padding: 10px 20px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>🎉 Thanks for visiting Rapid3D!</h2>
+  <p>Please leave us a quick review on Google:</p>
+
+  <a href="https://www.google.com/maps/place/Rapid+3D+-+3D+Printing+Services+in+Coimbatore+%7C+3D+Scanning+Service+in+Coimbatore/@11.043752,76.960981,17z/data=!3m1!4b1!4m6!3m5!1s0x3ba8588dd8eb2e19:0x305ec038f99ff48e!8m2!3d11.043752!4d76.960981!16s%2Fg%2F11f_c01mbx?entry=ttu&g_ep=EgoyMDI1MTAyMi4wIKXMDSoASAFQAw%3D%3D" target="_blank">
+    <button>Leave a Review</button>
+  </a>
+
+  <p>Once done, click below to claim your reward:</p>
+  <button onclick="confirmReview()">✅ I’ve submitted my review</button>
+
+  <script>
+    function confirmReview() {
+      fetch("192.168.1.138", {
+        method: "POST"
+      }).then(() => {
+        alert("Thanks! Your toy is on the way 🎁");
+      }).catch(() => {
+        alert("Could not reach dispenser. Please try again.");
+      });
+    }
+  </script>
+</body>
+</html>
